@@ -69,6 +69,7 @@ export const signInUser = async (
     if (!isValidPassword) {
       return new AuthenticationError('Invalid password');
     }
+    console.log(args)
 
     const token = tokenGenerator(user._id);
 

@@ -9,15 +9,23 @@ import {
   ApolloServerPluginLandingPageGraphQLPlayground,
 } from 'apollo-server-core';
 import { getUserByToken } from './auth/auth';
+// import cors from 'cors';
 
 const { PORT } = process.env;
 
 const app: express.Application = express();
 const port: string | number = PORT || 5050;
 
-const corsOptions = {
+// app.use(cors());
+
+interface CorsOpts {
+  origin: string;
+  credentials: boolean;
+}
+
+const cors: CorsOpts = {
   credentials: true,
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:3000/',
 };
 
 const server = new ApolloServer({
@@ -36,7 +44,6 @@ const server = new ApolloServer({
       const user = getUserByToken(token);
 
       return { user, isAuthenticated: true, token };
-      
     } catch (err) {
       return new AuthenticationError('User is not authenticated');
     }
@@ -50,8 +57,8 @@ const startServer = async (): Promise<void> => {
     await server.start();
     server.applyMiddleware({
       app,
-      cors: corsOptions,
       path: '/graphql',
+      cors
     });
     app.listen(port, () => {
       console.log(`Express server listening on port ${port}`);

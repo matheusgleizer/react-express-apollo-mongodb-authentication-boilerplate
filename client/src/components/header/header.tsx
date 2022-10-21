@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useContext, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,23 +12,24 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Link, Outlet } from 'react-router-dom';
-
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = [
-  { option: 'Profile', redirectUrl: '' },
-  { option: 'Account', redirectUrl: '' },
-  { option: 'Dashboard', redirectUrl: '' },
-  { option: 'Logout', redirectUrl: '' },
-];
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../../context/auth/auth';
 
 const Header = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const { user, signOut } = useContext(AuthContext);
+
+  const pages = ['Products', 'Pricing', 'Blog'];
+  const settings = [
+    { option: 'Profile', redirectUrl: '/profile' },
+    { option: 'Account', redirectUrl: '/account' },
+    { option: 'Dashboard', redirectUrl: '/dashboard' },
+    {
+      option: user ? 'Logout' : 'Login',
+      redirectUrl: user ? '/logout' : '/login',
+    },
+  ];
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -161,7 +162,18 @@ const Header = () => {
                 {settings.map(({ option, redirectUrl }) => (
                   <MenuItem key={option} onClick={handleCloseUserMenu}>
                     <Typography textAlign='center'>
-                      <Link to={redirectUrl}>{option}</Link>
+                      {option === 'Logout' ? (
+                        <Link
+                          onClick={() => {
+                            signOut();
+                          }}
+                          to={'/'}
+                        >
+                          {option}
+                        </Link>
+                      ) : (
+                        <Link to={redirectUrl}>{option}</Link>
+                      )}
                     </Typography>
                   </MenuItem>
                 ))}
@@ -170,7 +182,6 @@ const Header = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Outlet />
     </>
   );
 };
