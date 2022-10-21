@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "./dist",
+    "target": "ES2018",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    // "types": ["node"],
+    "forceConsistentCasingInFileNames": true,  
+    "strict": true,
+    "exactOptionalPropertyTypes": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": false,
+    "noUnusedParameters": true,
+    "baseUrl": "src",
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true
+  }
+}
